@@ -21,3 +21,18 @@ def test_lista_vazia():
 def test_todos_valores_iguais_sem_outlier():
     # desvio-padrao zero: nao ha' variacao, logo nao ha' outlier
     assert detectar_outliers([5, 5, 5, 5]) == []
+
+
+def test_nan_levanta_erro():
+    with pytest.raises(ValueError):
+        detectar_outliers([1.0, 2.0, float("nan"), 3.0])
+
+
+def test_inf_levanta_erro():
+    with pytest.raises(ValueError):
+        detectar_outliers([1.0, 2.0, float("inf")])
+
+
+def test_limiar_invalido_levanta_erro():
+    with pytest.raises(ValueError):
+        detectar_outliers([1, 2, 3], limiar=0)
