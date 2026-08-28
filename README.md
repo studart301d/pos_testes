@@ -3,7 +3,7 @@
 Implementação de uma função de detecção de outliers por **Z-score** para pipelines de Machine Learning, desenvolvida com **TDD** (Test-Driven Development) e validada com **testes de propriedade** usando a biblioteca `hypothesis`.
 
 **Autor:** Gabriel Moraes Ramos Studart  
-**Disciplina:** Orquestração de Workflows
+**Disciplina:** Testes
 
 ---
 
