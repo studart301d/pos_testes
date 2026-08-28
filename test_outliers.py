@@ -36,3 +36,34 @@ def test_inf_levanta_erro():
 def test_limiar_invalido_levanta_erro():
     with pytest.raises(ValueError):
         detectar_outliers([1, 2, 3], limiar=0)
+
+
+# ---------- Testes de propriedade (hypothesis) ----------
+from hypothesis import given, strategies as st
+
+# Numeros "bem-comportados": finitos, sem NaN/inf, magnitude controlada
+numeros = st.floats(min_value=-1e6, max_value=1e6, allow_nan=False, allow_infinity=False)
+listas = st.lists(numeros, min_size=1, max_size=50)
+
+
+@given(listas)
+def test_indices_sempre_validos_e_unicos(dados):
+    resultado = detectar_outliers(dados)
+    assert all(0 <= i < len(dados) for i in resultado)
+    assert len(resultado) == len(set(resultado))
+
+
+@given(listas, st.floats(min_value=-1000, max_value=1000, allow_nan=False, allow_infinity=False))
+def test_invariante_a_deslocamento(dados, deslocamento):
+    # Somar uma constante a todos os pontos nao muda quem e' outlier
+    base = detectar_outliers(dados)
+    deslocado = detectar_outliers([x + deslocamento for x in dados])
+    assert base == deslocado
+
+
+@given(listas, st.floats(min_value=0.001, max_value=1000, allow_nan=False, allow_infinity=False))
+def test_invariante_a_escala(dados, fator):
+    # Multiplicar todos os pontos por um fator positivo nao muda quem e' outlier
+    base = detectar_outliers(dados)
+    escalado = detectar_outliers([x * fator for x in dados])
+    assert base == escalado
